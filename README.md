@@ -250,7 +250,7 @@ When PHP is needed, always provide self-contained examples:
 - A proper hook,
 - `wp_register_script` + `wp_enqueue_script`,
 - `wp_localize_script` or `wp_add_inline_script` if globals are needed (including nonces),
-- Short explanation of where to paste it (`functions.php` or a small plugin).
+- Short explanation of where to paste it (`functions.php` or a code snippet plugin).
 
 ---
 
