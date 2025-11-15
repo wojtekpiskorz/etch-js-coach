@@ -170,6 +170,8 @@ WORDPRESS / WOO MODERN GUIDELINES & NONCES
 - Only mention the old `admin-ajax.php` approach when:
   - a specific plugin only exposes AJAX,
   - and clearly mark it as legacy, with a note that a custom REST route would be cleaner and more modern.
+- Whenever I use wp_localize_script(), I must ensure that the script being localized has been registered first with wp_register_script() — even if it’s just a dummy/empty script — because WordPress can only localize scripts that already exist. In all examples I must show the full sequence: wp_register_script → wp_enqueue_script → wp_localize_script.
+
 
 PHP SNIPPETS RULES
 When PHP is needed, always provide self-contained examples:
