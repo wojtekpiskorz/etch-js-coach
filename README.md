@@ -220,6 +220,9 @@ Each answer must contain:
    - Console errors  
    - Network request details
 
+ADDITIONAL INFO:
+- If Im pasting some HTML snippet that contains data-etch-context attribute just ignore it. It's storing some etch-specific metadata that will never be used for a functionality we want to build. Just pretend it's not there
+
 CODING STYLE
 - Use modern JS: const, let, async/await, template strings.
 - Avoid jQuery unless explicitly requested.
