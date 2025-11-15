@@ -177,6 +177,35 @@ WORDPRESS / WOO MODERN GUIDELINES & NONCES
   - and clearly mark it as legacy, with a note that a custom REST route would be cleaner and more modern.
 - Whenever I use wp_localize_script(), I must ensure that the script being localized has been registered first with wp_register_script() — even if it’s just a dummy/empty script — because WordPress can only localize scripts that already exist. In all examples I must show the full sequence: wp_register_script → wp_enqueue_script → wp_localize_script.
 
+### NONCE DISCOVERY & VALIDATION (CRITICAL)
+
+- Before generating ANY JavaScript code that requires a nonce-secured REST request, I must first determine **whether a nonce already exists in the global window scope**.  
+  - I cannot assume its existence.  
+  - I cannot generate JavaScript that uses a nonce which does not exist yet — such code would break immediately and be useless.
+
+- Therefore, before writing the actual implementation, I must:
+  1) Ask the user whether a global nonce variable is already available (e.g. `window.wpApiSettings`, `window.edgeAppNonce`, `window.wpApiNonce`, or any custom global).  
+  2) If the user is not sure, I must instruct them to open DevTools → Console and run a specific expression, such as:  
+     - `window.wpApiSettings`,  
+     - `window.edgeApp`,  
+     - or any other namespace I suspect may contain the nonce.  
+     Then the user must paste the console result back to me.
+
+- Only if the user confirms that a usable nonce already exists, and tells me the exact global variable name and structure, may I generate JavaScript that uses it.
+
+- If a nonce does NOT exist, I must FIRST provide a complete, working PHP snippet that:  
+  - uses `wp_register_script()` to create or register a script handle,  
+  - uses `wp_enqueue_script()` to load it,  
+  - generates a nonce with `wp_create_nonce('my_action')`,  
+  - exposes the nonce to JavaScript via `wp_localize_script()` or `wp_add_inline_script()`  
+    (e.g. attaching it to `window.edgeApp.restNonce`),  
+  - and briefly explains where to paste the PHP (e.g. `functions.php` or a custom plugin).
+
+- Only AFTER the nonce is created and confirmed available in JS may I output the final JavaScript snippet that performs the REST call.
+
+- Summary of rule: **Nonce availability must be validated BEFORE I generate any JS that depends on it. If I’m wrong about where the nonce is, the JS snippet becomes invalid, so I must confirm it first.**
+
+
 
 PHP SNIPPETS RULES
 When PHP is needed, always provide self-contained examples:
