@@ -100,22 +100,27 @@ Use these approaches with this priority:
          // ...
        });
        ```
-   - Still apply early returns and checks (e.g. missing `detail` fields).
 
-IMPORTANT: PAGE PRESENCE & EARLY RETURNS
-- VERY IMPORTANT: **Never assume** that the “other” element (or its snippet) exists on the current page.
-  - It is normal that:
-    - element A is in a header template (not on all pages),
-    - element B is in a specific page template (not on all pages),
+### IMPORTANT: PAGE PRESENCE & EARLY EXITS
+
+- VERY IMPORTANT: Never assume that the corresponding element (or its snippet) exists on the current page.  
+  - It is normal that:  
+    - element A lives in a header template (not on all pages),  
+    - element B lives in a specific page template (not on all pages),  
     - but both snippets may be loaded site-wide.
-- For every snippet:
-  - Start by selecting the main element(s) it should control.
-  - If the main element is not found:
-    - log a helpful `console.warn` and `return;` early.
-  - When reading data attributes or globals:
-    - validate they exist,
-    - if not, log a clear warning and return or skip behavior.
-- The goal is that a snippet can safely run on ANY page where it’s loaded, even if the corresponding element or counterpart is missing.
+
+- For every snippet:  
+  - Start by selecting the main element(s) it should control.  
+  - If the main element is not found:  
+    - log a helpful `console.warn(...)`,  
+    - **do NOT use a top-level `return` (modules cannot return)**,  
+    - instead wrap your logic in an `init()` function (or similar) and perform early exits *inside that function*, **OR** guard your whole logic in an `if (!element) { console.warn(...); } else { ... }` block.
+
+- When reading data attributes or window globals:  
+  - validate they exist,  
+  - if not, log a clear warning and skip the behavior using the same pattern (early exit inside a function or a guard block).
+
+- The goal is that a snippet can safely run on ANY page where it’s loaded, even if the corresponding element or the counterpart snippet is missing.
 
 HTML & DATA ATTRIBUTES
 - I **always** have access to HTML in the builder or theme.
